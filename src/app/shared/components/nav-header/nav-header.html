@@ -1,0 +1,15 @@
+<mat-toolbar class="header">
+  <nav class="header__nav">
+    @for (item of items(); track item.path) {
+      <a
+        [matButton]="link.isActive ? 'filled' : 'outlined'"
+        [routerLink]="item.path"
+        routerLinkActive
+        #link="routerLinkActive"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        {{ item.label }}
+      </a>
+    }
+  </nav>
+</mat-toolbar>

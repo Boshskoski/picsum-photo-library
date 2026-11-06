@@ -1,0 +1,9 @@
+.header {
+  justify-content: center;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+
+  &__nav {
+    display: flex;
+    gap: 1rem;
+  }
+}
