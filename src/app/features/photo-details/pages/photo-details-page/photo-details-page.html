@@ -1,0 +1,10 @@
+<section class="detail">
+  @if (photo(); as photo) {
+    <app-photo-viewer [photoId]="photo.id" />
+    <button matButton="filled" type="button" (click)="removeFromFavorites(photo)">
+      Remove from favorites
+    </button>
+  } @else {
+    <p class="detail__empty">This photo is no longer in your favorites.</p>
+  }
+</section>

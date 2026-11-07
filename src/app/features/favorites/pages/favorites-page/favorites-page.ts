@@ -1,6 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { FavoritesStore } from '../../services/store/favorites-store';
 import { PhotoGrid } from '../../../../shared/components/photo-grid/photo-grid';
+import { AppPath } from '../../../../core/constants/app-path.constants';
+import { Router } from '@angular/router';
 
 @Component({
   imports: [PhotoGrid],
@@ -10,6 +12,12 @@ import { PhotoGrid } from '../../../../shared/components/photo-grid/photo-grid';
 })
 export class FavoritesPage {
   private readonly favoritesStore = inject(FavoritesStore);
+  private readonly router = inject(Router);
 
   readonly favorites = this.favoritesStore.favorites;
+
+  openPhoto(id: string) {
+    this.router.navigate(['/', AppPath.PhotoDetail, id]);
+  }
+
 }

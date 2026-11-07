@@ -1,0 +1,16 @@
+@if (imageFailed()) {
+  <p class="photo-viewer__error">Could not load image</p>
+} @else {
+  @if (!imageReady()) {
+    <img class="photo-viewer__placeholder" [src]="photoId() | photoUrl: 'thumbnail'" alt="" />
+    <app-loader class="photo-viewer__loader" [diameter]="56" />
+  }
+  <img
+    class="photo-viewer__image"
+    [class.photo-viewer__image--loading]="!imageReady()"
+    [src]="photoId() | photoUrl: 'full'"
+    alt="Favorite photo"
+    (load)="imageReady.set(true)"
+    (error)="imageFailed.set(true)"
+  />
+}

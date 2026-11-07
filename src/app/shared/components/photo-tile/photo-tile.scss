@@ -1,7 +1,7 @@
 .tile {
   position: relative;
   overflow: hidden;
-  aspect-ratio: 2 / 3;
+  aspect-ratio: var(--photo-aspect-ratio);
   background: var(--mat-sys-surface-container-high);
 
   &--selected {

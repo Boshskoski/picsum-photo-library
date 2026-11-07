@@ -30,33 +30,12 @@ describe('PhotoDetailsPage', () => {
     fixture.detectChanges();
 
     const element = fixture.nativeElement as HTMLElement;
-    const image = () => element.querySelector<HTMLImageElement>('.detail__image');
-    const placeholder = () => element.querySelector<HTMLImageElement>('.detail__placeholder');
-    const spinner = () => element.querySelector('app-loader');
+    const viewer = () => element.querySelector('app-photo-viewer');
+    const image = () => element.querySelector<HTMLImageElement>('.photo-viewer__image');
     const emptyMessage = () => element.querySelector('.detail__empty')?.textContent ?? null;
-    const errorMessage = () => element.querySelector('.detail__error')?.textContent ?? null;
     const removeButton = () => element.querySelector<HTMLButtonElement>('button');
-    const imageLoaded = () => {
-      image()?.dispatchEvent(new Event('load'));
-      fixture.detectChanges();
-    };
-    const imageFailed = () => {
-      image()?.dispatchEvent(new Event('error'));
-      fixture.detectChanges();
-    };
 
-    return {
-      fixture,
-      store,
-      image,
-      placeholder,
-      spinner,
-      emptyMessage,
-      errorMessage,
-      removeButton,
-      imageLoaded,
-      imageFailed,
-    };
+    return { fixture, store, viewer, image, emptyMessage, removeButton };
   }
 
   describe('photo', () => {
@@ -65,70 +44,24 @@ describe('PhotoDetailsPage', () => {
 
       expect(image()?.src).toBe(`https://picsum.photos/seed/${sunsetPhoto.id}/1200/1800`);
     });
-
-    it('shows the thumbnail and a spinner until the full-size image has loaded', () => {
-      const { placeholder, spinner } = setup(sunsetPhoto.id, [sunsetPhoto]);
-
-      expect(placeholder()?.src).toBe(`https://picsum.photos/seed/${sunsetPhoto.id}/200/300`);
-      expect(spinner()).not.toBeNull();
-    });
-
-    it('hides the thumbnail and the spinner once the full-size image has loaded', () => {
-      const { placeholder, spinner, imageLoaded } = setup(sunsetPhoto.id, [sunsetPhoto]);
-
-      imageLoaded();
-
-      expect(placeholder()).toBeNull();
-      expect(spinner()).toBeNull();
-    });
-
-    it('shows a message instead of the image when the full-size image fails to load', () => {
-      const { image, placeholder, spinner, errorMessage, removeButton, imageFailed } = setup(
-        sunsetPhoto.id,
-        [sunsetPhoto],
-      );
-
-      imageFailed();
-
-      expect(errorMessage()).toContain('Could not load image');
-      expect(image()).toBeNull();
-      expect(placeholder()).toBeNull();
-      expect(spinner()).toBeNull();
-      expect(removeButton()).not.toBeNull();
-    });
-
-    it('shows the thumbnail and the spinner again when the id switches to another photo', () => {
-      const { fixture, placeholder, spinner, imageLoaded } = setup(sunsetPhoto.id, [
-        sunsetPhoto,
-        forestPhoto,
-      ]);
-      imageLoaded();
-
-      fixture.componentRef.setInput('id', forestPhoto.id);
-      fixture.detectChanges();
-
-      expect(placeholder()?.src).toBe(`https://picsum.photos/seed/${forestPhoto.id}/200/300`);
-      expect(spinner()).not.toBeNull();
-    });
   });
 
   describe('empty state', () => {
     it('shows only a message when the id is not a favorite', () => {
-      const { image, spinner, emptyMessage, removeButton } = setup('unknown', [sunsetPhoto]);
+      const { viewer, emptyMessage, removeButton } = setup('unknown', [sunsetPhoto]);
 
       expect(emptyMessage()).toContain('This photo is no longer in your favorites.');
-      expect(image()).toBeNull();
-      expect(spinner()).toBeNull();
+      expect(viewer()).toBeNull();
       expect(removeButton()).toBeNull();
     });
 
     it('shows the message when the favorite is removed elsewhere while open', () => {
-      const { fixture, store, image, emptyMessage } = setup(sunsetPhoto.id, [sunsetPhoto]);
+      const { fixture, store, viewer, emptyMessage } = setup(sunsetPhoto.id, [sunsetPhoto]);
 
       store.remove(sunsetPhoto.id);
       fixture.detectChanges();
 
-      expect(image()).toBeNull();
+      expect(viewer()).toBeNull();
       expect(emptyMessage()).toContain('This photo is no longer in your favorites.');
     });
   });
@@ -146,13 +79,13 @@ describe('PhotoDetailsPage', () => {
 
     it('keeps the favorite until the navigation to the favorites page is successful', async () => {
       vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(false);
-      const { fixture, store, image, removeButton } = setup(sunsetPhoto.id, [sunsetPhoto]);
+      const { fixture, store, viewer, removeButton } = setup(sunsetPhoto.id, [sunsetPhoto]);
 
       removeButton()?.click();
       await fixture.whenStable();
 
       expect(store.favorites()).toEqual([sunsetPhoto]);
-      expect(image()).not.toBeNull();
+      expect(viewer()).not.toBeNull();
     });
   });
 });
