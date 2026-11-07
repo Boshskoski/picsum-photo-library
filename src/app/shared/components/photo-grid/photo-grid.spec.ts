@@ -7,20 +7,25 @@ describe('PhotoGrid', () => {
   const forestPhoto: Photo = { id: 'forest' };
   const lakePhoto: Photo = { id: 'lake' };
 
-  function render(photos: Photo[]) {
+  function setup(photos: Photo[], isSelected?: (id: string) => boolean) {
     const fixture = TestBed.createComponent(PhotoGrid);
     fixture.componentRef.setInput('photos', photos);
+    if (isSelected) {
+      fixture.componentRef.setInput('isSelected', isSelected);
+    }
     fixture.detectChanges();
 
     const element = fixture.nativeElement as HTMLElement;
     const tiles = () => Array.from(element.querySelectorAll('app-photo-tile'));
     const sources = () => tiles().map((tile) => tile.querySelector('img')!.src);
+    const selected = () => tiles().map((tile) => tile.querySelector('mat-icon') !== null);
+    const clickTile = (index: number) => tiles()[index].querySelector('button')!.click();
 
-    return { fixture, tiles, sources };
+    return { fixture, tiles, sources, selected, clickTile };
   }
 
   it('shows a thumbnail tile for every photo, in order', () => {
-    const { sources } = render([sunsetPhoto, forestPhoto]);
+    const { sources } = setup([sunsetPhoto, forestPhoto]);
 
     expect(sources()).toEqual([
       'https://picsum.photos/seed/sunset/200/300',
@@ -29,13 +34,13 @@ describe('PhotoGrid', () => {
   });
 
   it('shows no tiles when there are no photos', () => {
-    const { tiles } = render([]);
+    const { tiles } = setup([]);
 
     expect(tiles()).toHaveLength(0);
   });
 
   it('adds a tile when a photo is added', () => {
-    const { fixture, tiles } = render([sunsetPhoto, forestPhoto]);
+    const { fixture, tiles } = setup([sunsetPhoto, forestPhoto]);
 
     fixture.componentRef.setInput('photos', [sunsetPhoto, forestPhoto, lakePhoto]);
     fixture.detectChanges();
@@ -44,7 +49,7 @@ describe('PhotoGrid', () => {
   });
 
   it('keeps the existing tiles when photos are appended, so loaded images do not flicker', () => {
-    const { fixture, tiles } = render([sunsetPhoto, forestPhoto]);
+    const { fixture, tiles } = setup([sunsetPhoto, forestPhoto]);
     const [sunsetTile, forestTile] = tiles();
 
     fixture.componentRef.setInput('photos', [sunsetPhoto, forestPhoto, lakePhoto]);
@@ -55,7 +60,7 @@ describe('PhotoGrid', () => {
   });
 
   it('follows the new order when photos are reordered', () => {
-    const { fixture, sources } = render([sunsetPhoto, forestPhoto]);
+    const { fixture, sources } = setup([sunsetPhoto, forestPhoto]);
 
     fixture.componentRef.setInput('photos', [forestPhoto, sunsetPhoto]);
     fixture.detectChanges();
@@ -64,5 +69,28 @@ describe('PhotoGrid', () => {
       'https://picsum.photos/seed/forest/200/300',
       'https://picsum.photos/seed/sunset/200/300',
     ]);
+  });
+
+  it('selects no tile by default', () => {
+    const { selected } = setup([sunsetPhoto, forestPhoto]);
+
+    expect(selected()).toEqual([false, false]);
+  });
+
+  it('selects only the tiles of photos the predicate accepts', () => {
+    const { selected } = setup([sunsetPhoto, forestPhoto, lakePhoto], (id) => id === 'forest');
+
+    expect(selected()).toEqual([false, true, false]);
+  });
+
+  it('emits the photo of the clicked tile', () => {
+    const { fixture, clickTile } = setup([sunsetPhoto, forestPhoto]);
+    const photoClick = vi.fn();
+    fixture.componentInstance.photoClick.subscribe(photoClick);
+
+    clickTile(1);
+
+    expect(photoClick).toHaveBeenCalledOnce();
+    expect(photoClick).toHaveBeenCalledWith(forestPhoto);
   });
 });

@@ -1,27 +1,43 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { PhotoTile } from './photo-tile';
 
 describe('PhotoTile', () => {
-  let fixture: ComponentFixture<PhotoTile>;
-  let element: HTMLElement;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [PhotoTile],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(PhotoTile);
-    element = fixture.nativeElement;
-  });
-
-  async function showUrl(url: string): Promise<void> {
+  function setup(url = 'picsum.photos/1') {
+    const fixture = TestBed.createComponent(PhotoTile);
     fixture.componentRef.setInput('url', url);
     fixture.detectChanges();
+
+    const element = fixture.nativeElement as HTMLElement;
+    const source = () => element.querySelector('img')!.getAttribute('src');
+    const selected = () => element.querySelector('mat-icon') !== null;
+    const click = () => element.querySelector('button')!.click();
+
+    return { fixture, source, selected, click };
   }
 
-  it('shows the image from the given url', async () => {
-    await showUrl('picsum.photos/1');
+  it('shows the image from the given url', () => {
+    const { source } = setup('picsum.photos/1');
 
-    expect(element.querySelector('img')?.getAttribute('src')).toBe('picsum.photos/1');
+    expect(source()).toBe('picsum.photos/1');
+  });
+
+  it('emits tileClick when clicked', () => {
+    const { fixture, click } = setup();
+    const tileClick = vi.fn();
+    fixture.componentInstance.tileClick.subscribe(tileClick);
+
+    click();
+
+    expect(tileClick).toHaveBeenCalledOnce();
+  });
+
+  it('shows as selected only when the selected input is true', () => {
+    const { fixture, selected } = setup();
+    expect(selected()).toBe(false);
+
+    fixture.componentRef.setInput('selected', true);
+    fixture.detectChanges();
+
+    expect(selected()).toBe(true);
   });
 });
