@@ -4,11 +4,12 @@ import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { MatButtonHarness } from '@angular/material/button/testing';
 import { NavHeader } from './nav-header';
 import { NavItem } from './models/nav-item.ui';
+import { AppPath } from '../../../core/constants/app-path.constants';
 
 describe('NavHeader', () => {
   const items: NavItem[] = [
-    { label: 'Photos', path: '/' },
-    { label: 'Favorites', path: '/favorites' },
+    { label: 'Photos', path: `/${AppPath.Photos}` },
+    { label: 'Favorites', path: `/${AppPath.Favorites}` },
   ];
 
   let fixture: ComponentFixture<NavHeader>;
@@ -43,30 +44,30 @@ describe('NavHeader', () => {
 
   it('renders a link per nav item', () => {
     expect(links().map((link) => link.textContent?.trim())).toEqual(['Photos', 'Favorites']);
-    expect(links().map((link) => link.getAttribute('href'))).toEqual(['/', '/favorites']);
+    expect(links().map((link) => link.getAttribute('href'))).toEqual([`/${AppPath.Photos}`, `/${AppPath.Favorites}`]);
   });
 
   it('marks Photos as the current page on the Photos view', async () => {
-    await goTo('/');
+    await goTo(`/${AppPath.Photos}`);
 
     expect(await currentPage()).toBe('Photos');
   });
 
   it('marks Favorites as the current page on the Favorites view', async () => {
-    await goTo('/favorites');
+    await goTo(`/${AppPath.Favorites}`);
 
     expect(await currentPage()).toBe('Favorites');
   });
 
   it('moves the current page when the user switches view', async () => {
-    await goTo('/');
-    await goTo('/favorites');
+    await goTo(`/${AppPath.Photos}`);
+    await goTo(`/${AppPath.Favorites}`);
 
     expect(await currentPage()).toBe('Favorites');
   });
 
   it('marks no link as current on a page outside the navigation', async () => {
-    await goTo('/photos/abc');
+    await goTo(`/${AppPath.PhotoDetail}/abc`);
 
     expect(await currentPage()).toBeUndefined();
   });

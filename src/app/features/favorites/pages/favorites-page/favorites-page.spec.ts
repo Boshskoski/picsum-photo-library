@@ -4,6 +4,7 @@ import { Photo } from '../../../../core/models/ui/photo.ui';
 import { FAVORITES_STORAGE_KEY } from '../../../../core/constants/storage-keys.constants';
 import { FavoritesStore } from '../../services/store/favorites-store';
 import { provideRouter, Router } from '@angular/router';
+import { AppPath } from '../../../../core/constants/app-path.constants';
 
 describe('FavoritesPage', () => {
   const sunsetPhoto: Photo = { id: 'sunset' };
@@ -13,7 +14,7 @@ describe('FavoritesPage', () => {
     localStorage.clear();
     TestBed.configureTestingModule({
       imports: [FavoritesPage],
-      providers: [provideRouter([{ path: 'photos/:id', children: [] }])],
+      providers: [provideRouter([{ path: `${AppPath.PhotoDetail}/:id`, children: [] }])],
     });
 
   });
@@ -111,7 +112,7 @@ describe('FavoritesPage', () => {
       tileButtons()[1].click();
       await fixture.whenStable();
  
-      expect(TestBed.inject(Router).url).toBe('/photos/forest');
+      expect(TestBed.inject(Router).url).toBe(`/${AppPath.PhotoDetail}/forest`);
     });
  
     it('keeps an id with special characters intact in the url', async () => {
@@ -121,7 +122,7 @@ describe('FavoritesPage', () => {
       tileButtons()[0].click();
       await fixture.whenStable();
  
-      expect(TestBed.inject(Router).url).toBe('/photos/a%20b%2Fc');
+      expect(TestBed.inject(Router).url).toBe(`/${AppPath.PhotoDetail}/a%20b%2Fc`);
     });
   });
 });
