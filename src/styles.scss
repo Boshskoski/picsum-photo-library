@@ -9,6 +9,7 @@ html {
   height: 100%;
   --app-header-height: 64px;
   --photo-aspect-ratio: calc(2 / 3);
+  scroll-padding-top: var(--app-header-height);
 
   @include mat.theme(
     (

@@ -1,0 +1,10 @@
+:host {
+  display: block;
+}
+
+app-nav-header {
+  display: block;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
