@@ -1,1 +1,9 @@
-<p>photos-page works!</p>
+<section class="photos">
+  <app-photo-grid
+    [photos]="photos()"
+  />
+
+  @if (loading()) {
+    <app-loader />
+  }
+</section>
