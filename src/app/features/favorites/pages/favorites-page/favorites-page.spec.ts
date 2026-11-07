@@ -3,6 +3,7 @@ import { FavoritesPage } from './favorites-page';
 import { Photo } from '../../../../core/models/ui/photo.ui';
 import { FAVORITES_STORAGE_KEY } from '../../../../core/constants/storage-keys.constants';
 import { FavoritesStore } from '../../services/store/favorites-store';
+import { provideRouter, Router } from '@angular/router';
 
 describe('FavoritesPage', () => {
   const sunsetPhoto: Photo = { id: 'sunset' };
@@ -10,6 +11,11 @@ describe('FavoritesPage', () => {
 
   beforeEach(() => {
     localStorage.clear();
+    TestBed.configureTestingModule({
+      imports: [FavoritesPage],
+      providers: [provideRouter([{ path: 'photos/:id', children: [] }])],
+    });
+
   });
 
   afterEach(() => {
@@ -25,8 +31,9 @@ describe('FavoritesPage', () => {
     const sources = () => tiles().map((tile) => tile.querySelector('img')!.src);
     const selected = () => tiles().map((tile) => tile.querySelector('mat-icon') !== null);
     const emptyMessage = () => element.querySelector('.favorites__empty')?.textContent ?? null;
+    const tileButtons = () => Array.from(element.querySelectorAll<HTMLButtonElement>('app-photo-tile button'));
 
-    return { fixture, tiles, sources, selected, emptyMessage };
+    return { fixture, tiles, sources, selected, emptyMessage, tileButtons };
   }
 
   describe('empty state', () => {
@@ -91,6 +98,30 @@ describe('FavoritesPage', () => {
       favorites.remove(forestPhoto.id);
       fixture.detectChanges();
       expect(emptyMessage()).toBe('No favorites yet. Tap a photo in Photos to add it here.');
+    });
+  });
+
+  describe('opening a photo', () => {
+    it('opens the single photo page of the clicked favorite', async () => {
+      const favorites = TestBed.inject(FavoritesStore);
+      favorites.add(sunsetPhoto);
+      favorites.add(forestPhoto);
+      const { fixture, tileButtons } = setup();
+ 
+      tileButtons()[1].click();
+      await fixture.whenStable();
+ 
+      expect(TestBed.inject(Router).url).toBe('/photos/forest');
+    });
+ 
+    it('keeps an id with special characters intact in the url', async () => {
+      TestBed.inject(FavoritesStore).add({ id: 'a b/c' });
+      const { fixture, tileButtons } = setup();
+ 
+      tileButtons()[0].click();
+      await fixture.whenStable();
+ 
+      expect(TestBed.inject(Router).url).toBe('/photos/a%20b%2Fc');
     });
   });
 });
