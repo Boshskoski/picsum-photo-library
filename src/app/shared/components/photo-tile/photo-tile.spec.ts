@@ -9,10 +9,15 @@ describe('PhotoTile', () => {
 
     const element = fixture.nativeElement as HTMLElement;
     const source = () => element.querySelector('img')!.getAttribute('src');
-    const selected = () => element.querySelector('mat-icon') !== null;
+    const selected = () => element.querySelector('.tile__badge') !== null;
     const click = () => element.querySelector('button')!.click();
+    const failed = () => element.querySelector('.tile__error') !== null;
+    const failImage = () => {
+      element.querySelector('img')!.dispatchEvent(new Event('error'));
+      fixture.detectChanges();
+    };
 
-    return { fixture, source, selected, click };
+    return { fixture, source, selected, click, failed, failImage };
   }
 
   it('shows the image from the given url', () => {
@@ -39,5 +44,25 @@ describe('PhotoTile', () => {
     fixture.detectChanges();
 
     expect(selected()).toBe(true);
+  });
+
+  it('shows an error state when the image fails to load', () => {
+    const { failed, failImage } = setup();
+    expect(failed()).toBe(false);
+
+    failImage();
+
+    expect(failed()).toBe(true);
+  });
+
+  it('does not emit tileClick when the image failed to load', () => {
+    const { fixture, click, failImage } = setup();
+    const tileClick = vi.fn();
+    fixture.componentInstance.tileClick.subscribe(tileClick);
+    failImage();
+
+    click();
+
+    expect(tileClick).not.toHaveBeenCalled();
   });
 });

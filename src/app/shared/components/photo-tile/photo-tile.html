@@ -1,10 +1,13 @@
 <mat-card class="tile">
-  <button
-    type="button"
-    class="tile__button"
-    (click)="tileClick.emit()"
-  >
-    <img [src]="url()" alt="" loading="lazy" />
+  <button type="button" class="tile__button" [disabled]="failed()" (click)="tileClick.emit()">
+    @if (failed()) {
+      <span class="tile__error">
+        <mat-icon>broken_image</mat-icon>
+        <span>Couldn't load</span>
+      </span>
+    } @else {
+      <img [src]="url()" alt="" loading="lazy" (error)="failed.set(true)" />
+    }
     @if (selected()) {
       <mat-icon class="tile__badge">favorite</mat-icon>
     }
