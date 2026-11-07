@@ -1,1 +1,7 @@
-<p>favorites-page works!</p>
+<section class="favorites">
+  @if (favorites().length === 0) {
+    <p class="favorites__empty">No favorites yet. Tap a photo in Photos to add it here.</p>
+  } @else {
+    <app-photo-grid [photos]="favorites()" />
+  }
+</section>

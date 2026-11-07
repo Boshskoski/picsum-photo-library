@@ -1,0 +1,8 @@
+.favorites {
+  &__empty {
+    margin: 0;
+    padding: 2rem;
+    text-align: center;
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
