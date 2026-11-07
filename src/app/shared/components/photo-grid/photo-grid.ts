@@ -11,8 +11,7 @@ import { Photo } from '../../../core/models/ui/photo.ui';
 })
 export class PhotoGrid {
   readonly photos = input.required<Photo[]>();
-  
-  readonly isSelected = input<(id: string) => boolean>(() => false);
+  readonly selectedIds = input<ReadonlySet<string>>(new Set());
 
   readonly photoClick = output<Photo>();
 }

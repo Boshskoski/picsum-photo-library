@@ -7,11 +7,11 @@ describe('PhotoGrid', () => {
   const forestPhoto: Photo = { id: 'forest' };
   const lakePhoto: Photo = { id: 'lake' };
 
-  function setup(photos: Photo[], isSelected?: (id: string) => boolean) {
+  function setup(photos: Photo[], selectedIds?: ReadonlySet<string>) {
     const fixture = TestBed.createComponent(PhotoGrid);
     fixture.componentRef.setInput('photos', photos);
-    if (isSelected) {
-      fixture.componentRef.setInput('isSelected', isSelected);
+    if (selectedIds) {
+      fixture.componentRef.setInput('selectedIds', selectedIds);
     }
     fixture.detectChanges();
 
@@ -77,8 +77,8 @@ describe('PhotoGrid', () => {
     expect(selected()).toEqual([false, false]);
   });
 
-  it('selects only the tiles of photos the predicate accepts', () => {
-    const { selected } = setup([sunsetPhoto, forestPhoto, lakePhoto], (id) => id === 'forest');
+  it('selects only the tiles whose photo id is in the selected set', () => {
+    const { selected } = setup([sunsetPhoto, forestPhoto, lakePhoto], new Set(['forest']));
 
     expect(selected()).toEqual([false, true, false]);
   });

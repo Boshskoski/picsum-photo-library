@@ -1,7 +1,7 @@
 <section class="photos">
   <app-photo-grid
     [photos]="photos()"
-    [isSelected]="isFavorite"
+    [selectedIds]="favoriteIds()"
     (photoClick)="addToFavorites($event)"
   />
   <div #loadMoreTrigger></div>

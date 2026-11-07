@@ -20,7 +20,7 @@ export class PhotosPage {
   readonly photos = this.photosFeedStore.photos;
   readonly loading = this.photosFeedStore.loading;
 
-  readonly isFavorite = (id: string): boolean => this.favoritesStore.isFavorite(id);
+  readonly favoriteIds = this.favoritesStore.favoriteIdSet;
 
   constructor() {
     const observer = new IntersectionObserver(
