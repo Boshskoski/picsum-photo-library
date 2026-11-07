@@ -2,6 +2,8 @@
   @for (photo of photos(); track photo.id) {
     <app-photo-tile
       [url]="photo.id | photoUrl: 'thumbnail'"
+      [selected]="isSelected()(photo.id)"
+      (tileClick)="photoClick.emit(photo)"
     />
   }
 </div>

@@ -2,7 +2,11 @@
   <button
     type="button"
     class="tile__button"
+    (click)="tileClick.emit()"
   >
     <img [src]="url()" alt="" loading="lazy" />
+    @if (selected()) {
+      <mat-icon class="tile__badge">favorite</mat-icon>
+    }
   </button>
 </mat-card>

@@ -1,6 +1,8 @@
 <section class="photos">
   <app-photo-grid
     [photos]="photos()"
+    [isSelected]="isFavorite"
+    (photoClick)="addToFavorites($event)"
   />
 
   @if (loading()) {

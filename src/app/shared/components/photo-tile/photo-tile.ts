@@ -10,4 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class PhotoTile {
   readonly url = input.required<string>();
+  readonly selected = input(false);
+  
+  readonly tileClick = output<void>();
 }
