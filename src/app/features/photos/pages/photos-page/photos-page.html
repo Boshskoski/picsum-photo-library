@@ -4,6 +4,7 @@
     [isSelected]="isFavorite"
     (photoClick)="addToFavorites($event)"
   />
+  <div #loadMoreTrigger></div>
 
   @if (loading()) {
     <app-loader />

@@ -6,13 +6,26 @@ import { PhotosFeedUtilService } from '../../services/util/photos-feed-util';
 import { FavoritesStore } from '../../../favorites/services/store/favorites-store';
 
 describe('PhotosPage', () => {
+  class FakeIntersectionObserver {
+    constructor(private readonly callback: (changes: { isIntersecting: boolean }[]) => void) {}
+
+    observe(): void {
+      this.callback([{ isIntersecting: true }]);
+    }
+
+    unobserve(): void {}
+    disconnect(): void {}
+  }
+
   beforeEach(() => {
     vi.useFakeTimers();
+    vi.stubGlobal('IntersectionObserver', FakeIntersectionObserver);
     localStorage.clear();
   });
 
   afterEach(() => {
     vi.useRealTimers();
+    vi.unstubAllGlobals();
   });
 
   function setup() {
