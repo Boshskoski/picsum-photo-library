@@ -7,12 +7,13 @@ import { FavoritesStore } from '../../../favorites/services/store/favorites-stor
 
 describe('PhotosPage', () => {
   class FakeIntersectionObserver {
-    constructor(private readonly callback: (changes: { isIntersecting: boolean }[]) => void) {}
+    static becomeVisible = (): void => {};
 
-    observe(): void {
-      this.callback([{ isIntersecting: true }]);
+    constructor(callback: (changes: { isIntersecting: boolean }[]) => void) {
+      FakeIntersectionObserver.becomeVisible = () => callback([{ isIntersecting: true }]);
     }
 
+    observe(): void {}
     unobserve(): void {}
     disconnect(): void {}
   }
@@ -32,6 +33,13 @@ describe('PhotosPage', () => {
     const fixture = TestBed.createComponent(PhotosPage);
     fixture.detectChanges();
 
+    function showLoadMoreTrigger(): void {
+      FakeIntersectionObserver.becomeVisible();
+      fixture.detectChanges();
+    }
+
+    showLoadMoreTrigger();
+
     const element = fixture.nativeElement as HTMLElement;
     const tiles = () => Array.from(element.querySelectorAll('app-photo-tile'));
     const loader = () => element.querySelector('app-loader');
@@ -43,7 +51,7 @@ describe('PhotosPage', () => {
       fixture.detectChanges();
     }
 
-    return { fixture, tiles, loader, clickTile, isMarkedAsFavorite, batchArrives };
+    return { fixture, tiles, loader, clickTile, isMarkedAsFavorite, batchArrives, showLoadMoreTrigger };
   }
 
   it('shows the loader while the first batch is on its way', () => {
@@ -83,5 +91,24 @@ describe('PhotosPage', () => {
     fixture.detectChanges();
 
     expect(isMarkedAsFavorite(0)).toBe(true);
+  });
+
+  it('loads the next batch when the load-more trigger becomes visible', async () => {
+    const { tiles, batchArrives, showLoadMoreTrigger } = setup();
+    await batchArrives();
+
+    showLoadMoreTrigger();
+    await batchArrives();
+
+    expect(tiles()).toHaveLength(PHOTOS_FEED_CONFIG.batchSize * 2);
+  });
+
+  it('does not start a second load while one is in progress', () => {
+    const loadNextBatch = vi.spyOn(TestBed.inject(PhotosFeedUtilService), 'loadNextBatch');
+    const { showLoadMoreTrigger } = setup();
+
+    showLoadMoreTrigger();
+
+    expect(loadNextBatch).toHaveBeenCalledOnce();
   });
 });
