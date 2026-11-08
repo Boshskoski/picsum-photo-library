@@ -35,13 +35,21 @@ describe('PhotoViewer', () => {
     expect(spinner()).not.toBeNull();
   });
 
-  it('hides the thumbnail and the spinner once the full-size image has loaded', () => {
-    const { placeholder, spinner, imageLoaded } = setup(sunsetPhoto.id);
+  it('hides the spinner and shows the full-size image once it has loaded', () => {
+    const { image, spinner, imageLoaded } = setup(sunsetPhoto.id);
 
     imageLoaded();
 
-    expect(placeholder()).toBeNull();
     expect(spinner()).toBeNull();
+    expect(image()?.classList).not.toContain('photo-viewer__image--loading');
+  });
+
+  it('keeps the thumbnail behind the full-size image so it fades in over the blur', () => {
+    const { placeholder, imageLoaded } = setup(sunsetPhoto.id);
+
+    imageLoaded();
+
+    expect(placeholder()?.src).toBe(`https://picsum.photos/seed/${sunsetPhoto.id}/200/300`);
   });
 
   it('shows a message instead of the image when the full-size image fails to load', () => {

@@ -6,7 +6,7 @@
         <span>Couldn't load</span>
       </span>
     } @else {
-      <img [src]="url()" alt="" loading="lazy" (error)="failed.set(true)" />
+      <img [src]="url()" alt="Random photo" loading="lazy" (error)="failed.set(true)" />
     }
     @if (selected()) {
       <mat-icon class="tile__badge">favorite</mat-icon>

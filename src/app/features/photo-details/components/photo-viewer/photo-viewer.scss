@@ -1,6 +1,7 @@
 :host {
   position: relative;
   display: block;
+  overflow: hidden;
   aspect-ratio: var(--photo-aspect-ratio);
   width: min(100%, calc(75dvh * var(--photo-aspect-ratio)));
 }

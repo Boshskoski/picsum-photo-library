@@ -1,8 +1,8 @@
 @if (imageFailed()) {
   <p class="photo-viewer__error">Could not load image</p>
 } @else {
+  <img class="photo-viewer__placeholder" [src]="photoId() | photoUrl: 'thumbnail'" alt="Random photo" />
   @if (!imageReady()) {
-    <img class="photo-viewer__placeholder" [src]="photoId() | photoUrl: 'thumbnail'" alt="" />
     <app-loader class="photo-viewer__loader" [diameter]="56" />
   }
   <img
