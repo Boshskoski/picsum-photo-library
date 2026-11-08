@@ -1,4 +1,4 @@
-import { PhotoSize } from "../types/photo-size";
+import { PhotoSize } from '../types/photo-size';
 
 export const PHOTO_DIMENSIONS: Record<PhotoSize, readonly [width: number, height: number]> = {
   thumbnail: [200, 300],

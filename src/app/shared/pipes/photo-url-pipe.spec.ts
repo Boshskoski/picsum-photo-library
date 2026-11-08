@@ -10,9 +10,12 @@ describe('PhotoUrlPipe', () => {
     pipe = TestBed.inject(PhotoUrlPipe);
   });
 
-  it.each(['thumbnail', 'full'] as const)('returns the %s url built by PhotoUtilService', (size) => {
-    const photoUtil = TestBed.inject(PhotoUtil);
+  it.each(['thumbnail', 'full'] as const)(
+    'returns the %s url built by PhotoUtilService',
+    (size) => {
+      const photoUtil = TestBed.inject(PhotoUtil);
 
-    expect(pipe.transform('abc123', size)).toBe(photoUtil.buildUrl('abc123', size));
-  });
+      expect(pipe.transform('abc123', size)).toBe(photoUtil.buildUrl('abc123', size));
+    },
+  );
 });

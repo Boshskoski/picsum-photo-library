@@ -9,7 +9,7 @@ describe('FavoritesStore', () => {
 
   beforeEach(() => {
     localStorage.clear();
-    vi.spyOn(console, 'error').mockImplementation(() => { });
+    vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   afterEach(() => {

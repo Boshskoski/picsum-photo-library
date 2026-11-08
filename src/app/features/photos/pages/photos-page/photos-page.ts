@@ -1,4 +1,11 @@
-import { Component, DestroyRef, ElementRef, afterRenderEffect, inject, viewChild } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  ElementRef,
+  afterRenderEffect,
+  inject,
+  viewChild,
+} from '@angular/core';
 import { PhotoGrid } from '../../../../shared/components/photo-grid/photo-grid';
 import { PhotosFeedStore } from '../../services/store/photos-feed-store';
 import { PHOTOS_FEED_CONFIG } from '../../constants/photos-feed.constant';

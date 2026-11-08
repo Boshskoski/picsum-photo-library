@@ -51,7 +51,15 @@ describe('PhotosPage', () => {
       fixture.detectChanges();
     }
 
-    return { fixture, tiles, loader, clickTile, isMarkedAsFavorite, batchArrives, showLoadMoreTrigger };
+    return {
+      fixture,
+      tiles,
+      loader,
+      clickTile,
+      isMarkedAsFavorite,
+      batchArrives,
+      showLoadMoreTrigger,
+    };
   }
 
   it('shows the loader while the first batch is on its way', () => {

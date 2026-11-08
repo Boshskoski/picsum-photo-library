@@ -38,13 +38,18 @@ describe('NavHeader', () => {
 
   async function currentPage(): Promise<string | undefined> {
     const loader = TestbedHarnessEnvironment.loader(fixture);
-    const filledButton = await loader.getHarnessOrNull(MatButtonHarness.with({ appearance: 'filled' }));
+    const filledButton = await loader.getHarnessOrNull(
+      MatButtonHarness.with({ appearance: 'filled' }),
+    );
     return filledButton?.getText();
   }
 
   it('renders a link per nav item', () => {
     expect(links().map((link) => link.textContent?.trim())).toEqual(['Photos', 'Favorites']);
-    expect(links().map((link) => link.getAttribute('href'))).toEqual([`/${AppPath.Photos}`, `/${AppPath.Favorites}`]);
+    expect(links().map((link) => link.getAttribute('href'))).toEqual([
+      `/${AppPath.Photos}`,
+      `/${AppPath.Favorites}`,
+    ]);
   });
 
   it('marks Photos as the current page on the Photos view', async () => {

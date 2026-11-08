@@ -5,9 +5,6 @@ import { routes } from './routes/app.routes';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(
-      routes,
-      withComponentInputBinding(),
-    )
-  ]
+    provideRouter(routes, withComponentInputBinding()),
+  ],
 };

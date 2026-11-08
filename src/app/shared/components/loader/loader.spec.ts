@@ -20,7 +20,9 @@ describe('Loader', () => {
     fixture.componentRef.setInput('diameter', 24);
     fixture.detectChanges();
 
-    const spinner = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>('mat-spinner')!;
+    const spinner = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>(
+      'mat-spinner',
+    )!;
     expect(spinner.style.width).toBe('24px');
     expect(spinner.style.height).toBe('24px');
   });

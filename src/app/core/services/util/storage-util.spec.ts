@@ -36,7 +36,7 @@ describe('StorageUtil', () => {
   });
 
   it('returns undefined instead of throwing for corrupted stored data', () => {
-    vi.spyOn(console, 'error').mockImplementation(() => { });
+    vi.spyOn(console, 'error').mockImplementation(() => {});
     localStorage.setItem(key, 'not valid json');
 
     expect(storage.read(key)).toBeUndefined();

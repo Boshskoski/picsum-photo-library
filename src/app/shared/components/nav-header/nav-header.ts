@@ -11,5 +11,5 @@ import { NavItem } from './models/nav-item.ui';
   templateUrl: './nav-header.html',
 })
 export class NavHeader {
- readonly items = input.required<readonly NavItem[]>();
+  readonly items = input.required<readonly NavItem[]>();
 }

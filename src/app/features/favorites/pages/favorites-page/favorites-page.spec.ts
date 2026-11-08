@@ -16,7 +16,6 @@ describe('FavoritesPage', () => {
       imports: [FavoritesPage],
       providers: [provideRouter([{ path: `${AppPath.PhotoDetail}/:id`, children: [] }])],
     });
-
   });
 
   afterEach(() => {
@@ -32,7 +31,8 @@ describe('FavoritesPage', () => {
     const sources = () => tiles().map((tile) => tile.querySelector('img')!.src);
     const selected = () => tiles().map((tile) => tile.querySelector('mat-icon') !== null);
     const emptyMessage = () => element.querySelector('.favorites__empty')?.textContent ?? null;
-    const tileButtons = () => Array.from(element.querySelectorAll<HTMLButtonElement>('app-photo-tile button'));
+    const tileButtons = () =>
+      Array.from(element.querySelectorAll<HTMLButtonElement>('app-photo-tile button'));
 
     return { fixture, tiles, sources, selected, emptyMessage, tileButtons };
   }
@@ -108,20 +108,20 @@ describe('FavoritesPage', () => {
       favorites.add(sunsetPhoto);
       favorites.add(forestPhoto);
       const { fixture, tileButtons } = setup();
- 
+
       tileButtons()[1].click();
       await fixture.whenStable();
- 
+
       expect(TestBed.inject(Router).url).toBe(`/${AppPath.PhotoDetail}/forest`);
     });
- 
+
     it('keeps an id with special characters intact in the url', async () => {
       TestBed.inject(FavoritesStore).add({ id: 'a b/c' });
       const { fixture, tileButtons } = setup();
- 
+
       tileButtons()[0].click();
       await fixture.whenStable();
- 
+
       expect(TestBed.inject(Router).url).toBe(`/${AppPath.PhotoDetail}/a%20b%2Fc`);
     });
   });

@@ -6,7 +6,8 @@
 }
 
 .photo-viewer {
-  &__image, &__placeholder {
+  &__image,
+  &__placeholder {
     position: absolute;
     inset: 0;
     width: 100%;

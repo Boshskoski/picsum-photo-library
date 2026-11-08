@@ -19,5 +19,4 @@ export class FavoritesPage {
   openPhoto(id: string) {
     this.router.navigate(['/', AppPath.PhotoDetail, id]);
   }
-
 }
